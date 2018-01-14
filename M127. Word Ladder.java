@@ -1,0 +1,29 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> reached = new HashSet<String>();     
+        reached.add(beginWord);
+        Set<String> dict = new HashSet<String>();
+        for (String word:wordList) dict.add(word);
+        int distance = 1;
+        while (!reached.contains(endWord)) {
+            Set<String> toAdd = new HashSet<String>();
+            for (String each:reached) {
+                for (int i = 0; i < each.length(); i++) {
+                    char[] chars = each.toCharArray();
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+                        chars[i] = ch;
+                        String word = new String(chars);
+                        if (dict.contains(word)) {
+                            toAdd.add(word);
+                            dict.remove(word);
+                        }
+                    }
+                }
+            }
+            distance++;
+            if (toAdd.size() == 0) return 0;
+            reached = toAdd;
+        }
+        return distance;
+    }
+}
