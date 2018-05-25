@@ -1,0 +1,38 @@
+class Solution {
+    public int numBusesToDestination(int[][] routes, int S, int T) {
+        if (S==T) return 0;
+        int m = routes.length;
+        HashMap<Integer, List<Integer>> map = new HashMap();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < routes[i].length; j++) {
+                int num = routes[i][j];
+                if (map.containsKey(num)) {
+                    map.get(num).add(i);
+                } else {
+                    map.put(num, new ArrayList<Integer>());
+                    map.get(num).add(i);
+                }
+            }
+        }
+        Set<Integer> set = new HashSet();
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.offer(S);
+        int res = 0;
+        while (!q.isEmpty()) {
+            res++;
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int pos = q.poll();
+                for (int k:map.get(pos)) {
+                    if (!set.add(k)) continue;
+                    for (int s: routes[k]) {
+                        if (s == T) return res;
+                        else q.offer(s);
+                    }
+                }
+            }
+            
+        }
+        return -1;
+    }
+}
