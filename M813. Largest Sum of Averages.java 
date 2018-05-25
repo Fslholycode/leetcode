@@ -1,0 +1,23 @@
+class Solution {
+    public double largestSumOfAverages(int[] A, int K) {
+        int n = A.length;
+        double sum = 0.0;
+        double[][] dp = new double[n+1][K+1];
+        for (int i = 0; i < n; i++) {
+            sum+=A[i];
+            dp[i+1][1] = sum/(i+1);
+        }
+        helper(A, K, n, dp);
+        return dp[n][K];
+    }
+    public double helper(int[] A, int k, int n, double[][] dp) {
+        if (dp[n][k] > 0) return dp[n][k];
+        if (n < k) return 0;
+        double cur = 0.0;
+        for (int i = n; i > 0; i--) {
+            cur+=A[i-1];
+            dp[n][k] = Math.max(dp[n][k], helper(A,k-1,i,dp)+cur/(i-pos+1));
+        }
+        return dp[n][k];
+    }
+}
