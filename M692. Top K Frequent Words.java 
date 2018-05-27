@@ -1,0 +1,30 @@
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        HashMap<String, Integer> map = new HashMap();
+        for (String s:words) map.put(s, map.getOrDefault(s,0)+1);
+        PriorityQueue<element> pq = new PriorityQueue(new Comparator<element>() {
+            public int compare(element e1, element e2) {
+                return e1.count == e2.count?e1.s.compareTo(e2.s):e2.count-e1.count;
+            }
+        });
+        for (String s : map.keySet()) {
+            element e = new element(map.get(s), s);
+            pq.offer(e);
+        }
+        element e = null;
+        List<String> res = new ArrayList();
+        while (k-->0) {
+            e = pq.poll();
+            res.add(e.s);
+        }
+        return res;
+    }
+    class element {
+        int count = 0;
+        String s;
+        public element(int n, String s) {
+            count = n;
+            this.s = s;
+        }
+    }
+}
