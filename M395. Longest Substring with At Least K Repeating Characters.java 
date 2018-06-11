@@ -1,0 +1,57 @@
+class Solution {
+    public int longestSubstring(String s, int k) {
+        return helper(s, 0, s.length()-1, k);
+    }
+    public int helper(String s, int start, int end, int k) {
+        int res = Integer.MIN_VALUE;
+        int[] count = new int[26];
+        for (int i = start; i <= end; i++) {
+            count[s.charAt(i)-'a']++;
+        }
+        for (int i = 0; i < 26; i++) {
+            if (count[i] < k) {
+                for (int j = start; j <= end; j++) {
+                    if (s.charAt(j)-'a' == i) {
+                        int left = helper(s, start, j-1, k);
+                        int right = helper(s, j+1, end, k);
+                        return Math.max(left, right);
+                    }
+                }
+            }
+        }
+        return end-start+1;
+    }
+}
+
+class Solution {
+    public int longestSubstring(String s, int k) {
+        if (s.length() == 0) return 0;
+        int[] count = new int[26];
+        int res = 0;
+        for (int m = 1; m <= 26 && m <= s.length(); m++) {
+            Arrays.fill(count, 0);
+            int i = 0;
+            int j = 0;
+            int unique = 0;
+            int noLessThanK = 0;
+            while (j < s.length()) {
+                if (unique <= m) {
+                    char c = s.charAt(j);
+                    if (count[c-'a'] == 0) unique++;
+                    count[c-'a']++;
+                    if (count[c-'a'] == k) noLessThanK++;
+                    j++;
+                } else {
+                    char c = s.charAt(i);
+                    if (count[c-'a'] == k) noLessThanK--;
+                    count[c-'a']--;
+                    if (count[c-'a'] == 0) unique--;
+                    i++;
+                }
+                if (noLessThanK == m && unique == m) res = Math.max(res, j-i);
+                // System.out.println(m+" "+i+" "+j+" "+res);
+            }
+        }
+        return res;
+    }
+}
