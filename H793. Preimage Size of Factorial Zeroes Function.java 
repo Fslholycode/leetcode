@@ -1,0 +1,29 @@
+class Solution {
+    public int preimageSizeFZF(int K) {
+        return getRange(K)-getRange(K-1);
+    }
+    public int getRange(int k) {
+        long start = 0, end = Long.MAX_VALUE;
+        while (start <= end) {
+            long mid = start + (end-start)/2;
+            if (getNum(mid) > k) end = mid-1;
+            else start = mid+1;
+        }
+        return (int)(start-1);
+    }
+    public long getNum(long cur) {
+        long res = 0;
+        for (long i = 5; cur/i >= 1; i*=5) {
+            res+=cur/i;
+        }
+        return res;
+    }
+//     long getZeroes(long N){
+//         long count = 0;
+//         for(long i=5;N/i>=1;i=i*5){
+//             count+=N/i;
+//         }
+        
+//         return count;
+//     }
+}
