@@ -1,0 +1,20 @@
+class Solution {
+    public int minSwap(int[] A, int[] B) {
+        int[] swap = new int[A.length+1];
+        int[] notswap = new int[A.length+1];
+        swap[1] = 1;
+        for (int i = 2; i <= A.length; i++) {
+            notswap[i] = i;
+            swap[i] = i;
+            if (A[i-1] > A[i-2] && B[i-1] > B[i-2]) {
+                swap[i] = swap[i-1]+1;
+                notswap[i] = notswap[i-1];
+            }
+            if (A[i-1] > B[i-2] && B[i-1] > A[i-2]) {
+                notswap[i] = Math.min(swap[i-1], notswap[i]);
+                swap[i] = Math.min(swap[i], notswap[i-1]+1);
+            }
+        }
+        return Math.min(swap[A.length], notswap[A.length]);
+    }
+}
