@@ -1,25 +1,24 @@
 public class Solution {
     public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> res = new ArrayList<>();
-        if(nums == null || nums.length == 0) return res;
+        List<List<Integer>> res = new ArrayList();
+        boolean[] visited = new boolean[nums.length];
         Arrays.sort(nums);
-        boolean[] used = new boolean[nums.length];
-        Helper(res, new ArrayList<Integer>(), nums, used);
+        helper(nums, visited, res, new ArrayList());
         return res;
     }
-    public void Helper(List<List<Integer>> res, List<Integer> list, int[] nums, boolean[] used) {
+    public void helper(int[] nums, boolean[] visited, List<List<Integer>> res, List<Integer> list) {
         if (list.size() == nums.length) {
-            res.add(new ArrayList<Integer>(list));
-            return;
+            res.add(new ArrayList(list));
         }
         for (int i = 0; i < nums.length; i++) {
-            if (used[i]) continue;
-            if (i > 0 && nums[i] == nums[i-1] && !used[i-1]) continue; //去掉重复的，因为前一位数字在之前用过，如果现在用就会重复
-            list.add(nums[i]);
-            used[i] = true;
-            Helper(res,list,nums,used);
-            list.remove(list.size()-1);
-            used[i] = false;
+            if (i > 0 && visited[i-1] && nums[i] == nums[i-1]) continue;
+            if (!visited[i]) {
+                list.add(nums[i]);
+                visited[i] = true;
+                helper(nums, visited, res, list);
+                list.remove(list.size()-1);
+                visited[i] = false;
+            }
         }
     }
 }
