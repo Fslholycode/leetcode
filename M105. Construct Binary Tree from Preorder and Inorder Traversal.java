@@ -9,21 +9,22 @@
  */
 public class Solution {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        return helper(0, 0, inorder.length - 1, preorder, inorder);
+        return helper(preorder, 0, inorder, 0, inorder.length-1);
     }
-    public TreeNode helper(int preStart, int inStart, int inEnd, int[] preorder, int[] inorder) {
-        if (preStart > preorder.length - 1 || inStart > inEnd) {
-            return null;
+    public TreeNode helper(int[] preorder, int pre, int[] inorder, int left2, int right2) {
+        // System.out.println(left1 +" "+right1+" "+left2+" "+right2);
+
+        if (pre >= preorder.length || left2 > right2) return null;
+        int root = preorder[pre];
+        int index = left2;
+        for (;index <= right2; index++) {
+            if (inorder[index]== root) break;
         }
-        TreeNode root = new TreeNode(preorder[preStart]);
-        int inIndex = 0; // Index of current root in inorder
-        for (int i = inStart; i <= inEnd; i++) {
-            if (inorder[i] == root.val) {
-                inIndex = i;
-            }
-        }
-        root.left = helper(preStart + 1, inStart, inIndex - 1, preorder, inorder);
-        root.right = helper(preStart + inIndex - inStart + 1, inIndex + 1, inEnd, preorder, inorder);
-        return root;
+        TreeNode node = new TreeNode(root);
+        // System.out.println(left1 +" "+right1+" " +index+" "+left2+" "+right2);
+        node.left = helper(preorder, pre+1, inorder, left2, index-1);
+        node.right = helper(preorder, pre+index-left2+1, inorder, index+1, right2);
+        // node.right = helper(preorder, index+1, inorder, index+1, right2);
+        return node;
     }
 }
