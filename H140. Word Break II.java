@@ -1,41 +1,24 @@
 class Solution {
     public List<String> wordBreak(String s, List<String> wordDict) {
-        if (!iswordBreak(s, wordDict)) return new ArrayList();
-        Map<String, Integer> map = new HashMap<>();
-        map.put("", 0);
-        ArrayList<String> list = new ArrayList();
-        ArrayList<String> as = new ArrayList();
-        as.add("");
-        ArrayList<String> prev = new ArrayList(as);
-        for (int i = 1; i <= s.length(); i++) {
-            for (String str : prev) {
-                String cur = s.substring(map.get(str),i);
-                if (wordDict.contains(cur)) {
-                    cur = str+" "+cur;
-                    map.put(cur, i);
-                    as.add(cur);
-                    if (i == s.length()) list.add(cur);
-                }      
-            }
-            prev = new ArrayList(as);
-        }
-        List<String> res = new ArrayList();
-        for (int i = 0; i < list.size(); i++) {
-            res.add(list.get(i).trim());
-        }
-        return res;
+        return helper(s, wordDict, new HashMap<String, List<String>>());
     }
-    public boolean iswordBreak(String s, List<String> wordDict) {
-        boolean[] dp = new boolean[s.length()+1];
-        dp[0] = true;
-        for (int i = 1; i <= s.length(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (dp[j] && wordDict.contains(s.substring(j,i))) {
-                    dp[i] = true;
-                    break;
-                }       
+    
+    public List<String> helper(String s, List<String> wordDict, Map<String, List<String>> map) {
+        if (map.containsKey(s)) return map.get(s);
+        List<String> res = new ArrayList();
+        if (s.length() == 0) {
+            res.add("");
+            return res;
+        }
+        for (String str : wordDict) {
+            if (s.startsWith(str)) {
+                List<String> next = helper(s.substring(str.length()), wordDict, map);
+                for (String sub:next) {
+                    res.add(str+(sub.isEmpty()?"":" ")+sub);
+                }                       
             }
         }
-        return dp[s.length()];
+        map.put(s, res);
+        return res;
     }
 }
