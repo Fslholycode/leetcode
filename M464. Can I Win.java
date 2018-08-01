@@ -1,40 +1,36 @@
-public class Solution {
-    Map<Integer, Boolean> map;
-    boolean[] used;
+class Solution {
+    
+    HashMap<String, Boolean> map = new HashMap();
     public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
         int sum = (1+maxChoosableInteger)*maxChoosableInteger/2;
         if(sum < desiredTotal) return false;
         if(desiredTotal <= 0) return true;
         
-        map = new HashMap();
-        used = new boolean[maxChoosableInteger+1];
-        return helper(desiredTotal);
+        HashMap<String, Boolean> map = new HashMap();
+        int[] used = new int[maxChoosableInteger+1];
+        return helper(desiredTotal, map, used);
     }
-    public boolean helper(int desiredTotal) {
-        if(desiredTotal <= 0) return false;
-        int key = format(used);
-        if (!map.containsKey(key)) {
-            for(int i=1; i<used.length; i++) {
-                if (!used[i]) {
-                    used[i] = true;
-                    if (!helper(desiredTotal-i)) {
-                        map.put(key,true);
-                        used[i] = false;
-                        return true;
-                    }
-                    used[i] = false;
+    public boolean helper(int desiredTotal, HashMap<String, Boolean> map, int[] used) {
+        String s = Arrays.toString(used);
+        if (map.containsKey(s)) {
+            return map.get(s);
+        }
+        if (desiredTotal <= 0) {
+            map.put(s, false);
+            return false;
+        }
+        for (int i = 1; i < used.length; i++) {
+            if (used[i] == 0) {
+                used[i] = 1;
+                if (!helper(desiredTotal-i, map, used)) {
+                    map.put(s, true);
+                    used[i] = 0;
+                    return true;
                 }
+                used[i] = 0;
             }
-            map.put(key,false);
         }
-        return map.get(key);
-    }
-    public int format(boolean[] used){
-        int num = 0;
-        for(boolean b: used){
-            num <<= 1;
-            if(b) num |= 1;
-        }
-        return num;
+        map.put(s, false);
+        return false;
     }
 }
